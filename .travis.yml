@@ -1,0 +1,60 @@
+language: ruby
+cache: bundler
+sudo: false
+env:
+  global: 
+    - JRUBY_OPTS=--2.0
+  matrix:
+    - DB=
+    - DB=sqlite
+    - DB=sqlite USE_SQLITE_EXT=1
+    - DB=postgres
+    - DB=mysql
+rvm:
+  - 2.0.0
+  - 2.1.10
+  - 2.2.10
+  - 2.3.7
+  - 2.4.4
+  - 2.5.1
+  - jruby-19mode
+gemfile:
+  - Gemfile
+  - gemfiles/Gemfile.rails3.2
+  - gemfiles/Gemfile.rails4.1
+  - gemfiles/Gemfile.rails5.0
+before_install:
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
+matrix:
+  exclude:
+    - env: DB=
+      gemfile: gemfiles/Gemfile.rails3.2
+    - env: DB=
+      gemfile: gemfiles/Gemfile.rails4.1
+    - env: DB=
+      gemfile: gemfiles/Gemfile.rails5.0
+    - rvm: 2.0.0
+      gemfile: Gemfile
+    - rvm: 2.0.0
+      gemfile: gemfiles/Gemfile.rails5.0
+    - rvm: 2.1.10
+      gemfile: Gemfile
+    - rvm: 2.1.10
+      gemfile: gemfiles/Gemfile.ruby1.9.3
+    - rvm: 2.1.10
+      gemfile: gemfiles/Gemfile.rails5.0
+    - rvm: 2.4.4
+      gemfile: gemfiles/Gemfile.rails4.1
+    - rvm: 2.5.1
+      gemfile: gemfiles/Gemfile.rails4.1
+    - rvm: 2.4.4
+      gemfile: gemfiles/Gemfile.rails3.2
+    - rvm: 2.5.1
+      gemfile: gemfiles/Gemfile.rails3.2
+    - rvm: jruby-19mode
+      gemfile: gemfiles/Gemfile.rails5.0
+    - rvm: jruby-19mode
+      gemfile: gemfiles/Gemfile.rails4.1
+    - env: DB=sqlite USE_SQLITE_EXT=1
+      rvm: jruby-19mode
